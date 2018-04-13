@@ -1,4 +1,5 @@
 'use strict';
+/* global API, Saved */
 const DOMElements = (() => {
   const createDOMResult = bookmark => {
     return `
@@ -36,13 +37,22 @@ const DOMElements = (() => {
   };
 
   const handleBookmarkFormCompletion = () => {
-    $('fieldset').on('click', '#findit-btn', (event) => {
-      event.preventDefault();      
+    $('fieldset').on('click', '#findit-btn', (event) => {      
       console.log('button works');
-      const newTitle = $('#title').val();
-      console.log(newTitle);
+      const newBookmark = {
+        newTitle: $('#title').val(),
+        newUrl: $('#url-link').val(),
+        newDesc: $('#desc').val(),
+        newRating: $('#rating').val().slice(0,1)
+      };
+      API.createAPIData(newBookmark, () => {
+        Saved.addBookmark(newBookmark);
+        $('.modal').toggleClass('hidden');
+        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks));
+      });
+      //console.log(newBookmark);
     });
-  }
+  };
 
   return {
     createDOMResult, createDOMExpand, 

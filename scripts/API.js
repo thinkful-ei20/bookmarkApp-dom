@@ -21,7 +21,28 @@ const API = (() => {
     });
   };
 
+  const updateAPIData = (formObj, win, loss) => {
+    $.ajax({
+      url: `${BASE_URL}/bookmarks/${formObj.id}`,
+      method: 'PATCH',
+      contentType: 'application/json',
+      data: JSON.stringify(formObj),
+      success: win,
+      error: loss
+    });
+  };
+
+  const deleteAPIData = (id, win, loss) => {
+    $.ajax({
+      url: `${BASE_URL}/bookmarks/${id}`,
+      method: 'DELETE',
+      success: win,
+      error: loss
+    });
+  };
+
   return {
-    getAPIData, createAPIData
+    getAPIData, createAPIData, deleteAPIData,
+    updateAPIData
   };
 })();
