@@ -7,5 +7,8 @@ $(
     DOMElements.handleExpandedView();
     DOMElements.handleBookmarkFormCompletion();
     DOMElements.handleBookmarkFormModal();
+    DOMElements.handleDeleteButton();
+    DOMElements.handleEditButton();
+    DOMElements.handleInfoBox();
   })
 );

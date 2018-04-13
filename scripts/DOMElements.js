@@ -29,6 +29,12 @@ const DOMElements = (() => {
     $('.js-titles').html(result);
   };
 
+  const handleInfoBox = () => {
+    $('.opt-right').on('click', '#info-btn', () => {
+      console.log('info button works');
+    });
+  };
+
   const handleExpandedView = () => {
     $('.titleBox').on('click', '.js-show-btn', (event) => {
       $(event.target).html('hide').removeClass('js-show-btn').addClass('js-hide-btn');
@@ -42,10 +48,24 @@ const DOMElements = (() => {
   };
 
   const handleDeleteButton = () => {
-    $('.js-desc').on('click', '.js-delete-btn', (event) => {
-      console.log('button works');
+    $('.titleBox').on('click', '.js-delete-btn', (event) => {
+      const bookmarkId = $(event.target).closest('li').data('id');
+      API.deleteAPIData(bookmarkId, () => {
+        Saved.deleteBookmark(bookmarkId);
+        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks));
+        DOMElements.handleExpandedView();
+        DOMElements.handleDeleteButton();
+        DOMElements.handleEditButton();
+      });
     });
   };
+
+  const handleEditButton = () => {
+    $('.titleBox').on('click', '.js-edit-btn', event => {
+      console.log('edit button works');
+    });
+  };
+
 
   const handleBookmarkFormModal = () => {
     $('.opt-left').on('click', '#add-btn', () => {
@@ -70,6 +90,8 @@ const DOMElements = (() => {
         Saved.addBookmark(bookmark);
         DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks));
         DOMElements.handleExpandedView();
+        DOMElements.handleDeleteButton();
+        DOMElements.handleEditButton();
       });
       $('.modal').toggleClass('hidden');
     });
@@ -79,6 +101,6 @@ const DOMElements = (() => {
     createDOMResult, createDOMExpand, 
     createDOMBookmarks, render, handleBookmarkFormModal,
     handleBookmarkFormCompletion, handleExpandedView,
-    handleDeleteButton
+    handleDeleteButton, handleEditButton, handleInfoBox
   };
 })();
