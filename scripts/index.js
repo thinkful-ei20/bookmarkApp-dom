@@ -10,5 +10,6 @@ $(
     DOMElements.handleDeleteButton();
     DOMElements.handleEditButton();
     DOMElements.handleInfoBox();
+    DOMElements.handleFilteredView();
   })
 );

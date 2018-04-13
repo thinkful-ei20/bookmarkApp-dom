@@ -29,6 +29,27 @@ const DOMElements = (() => {
     $('.js-titles').html(result);
   };
 
+  const handleFilteredView = () => {
+    $('.opt-left').on('change', '#fil-opt', () => {
+      switch($('#fil-opt').val()) {
+      case '5 stars only':
+        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks.filter(bookmark => bookmark.rating === 5)));
+        break;
+      case 'above 3 stars':
+        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks.filter(bookmark => bookmark.rating > 3)));
+        break;
+      case 'above 2 stars':
+        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks.filter(bookmark => bookmark.rating > 2)));
+        break;
+      case 'above 1 stars':
+        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks.filter(bookmark => bookmark.rating > 1)));
+        break;
+      default:
+        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks));
+      }
+    });
+  };
+
   const handleInfoBox = () => {
     $('.opt-right').on('click', '#info-btn', () => {
       console.log('info button works');
@@ -101,6 +122,7 @@ const DOMElements = (() => {
     createDOMResult, createDOMExpand, 
     createDOMBookmarks, render, handleBookmarkFormModal,
     handleBookmarkFormCompletion, handleExpandedView,
-    handleDeleteButton, handleEditButton, handleInfoBox
+    handleDeleteButton, handleEditButton, handleInfoBox,
+    handleFilteredView
   };
 })();
