@@ -3,7 +3,7 @@
 const DOMElements = (() => {
   const createDOMResult = bookmark => {
     return `
-    <li class="titleBox">
+    <li class="titleBox" data-id="${bookmark.id}">
       <button class="js-show-btn">=></button>
       <span class="js-result">${bookmark.title} : ${bookmark.rating} stars</span>
     </li>
@@ -32,10 +32,10 @@ const DOMElements = (() => {
   const handleExpandedView = () => {
     $('.titleBox').on('click', '.js-show-btn', (event) => {
       $(event.target).html('hide').removeClass().addClass('js-hide-btn');
-      $(event.target).closest('.titleBox').append('<p class="js-desc">hi</p>');
+      const bookmark = Saved.getBookmarkFromId($(event.target).closest('li').data('id'));
+      $(event.target).closest('.titleBox').append(createDOMExpand(bookmark));
     });
     $('.titleBox').on('click', '.js-hide-btn', () => {
-      console.log('button works');
       $(event.target).html('=>').removeClass().addClass('js-show-btn');
       $(event.target).closest('.titleBox').find('.js-desc').remove();
     });
