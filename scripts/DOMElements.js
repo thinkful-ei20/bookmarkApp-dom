@@ -19,18 +19,13 @@ const DOMElements = (() => {
     </div>
     `;
   };
-  const createDOMErrorMessage = () => {
+
+  const createError = () => {
     return `
     <div id="error-message">
       <p id="error-content">${Saved.APIerror}</p>
     </div>
     `;
-  };
-
-  const updateErrorMessage = (e) => {
-    if (e.responseJSON && e.responseJSON.message) {
-      Saved.APIerror = e.responseJSON.message;
-    } else { Saved.APIerror = `${e.code} type of error has occured on the server`; }
   };
 
   const createDOMBookmarks = bookmarks => {
@@ -39,9 +34,14 @@ const DOMElements = (() => {
   };
 
   const render = (result) => {
-    if (Saved.APIerror) {
-      $('.error-container').html(createDOMErrorMessage(Saved.error));
-      $('.modal-error-container').html(createDOMErrorMessage(Saved.error));
+    console.log('render called');
+    if(Saved.APIerror) {
+      console.log('error should render');
+      console.log(Saved.APIerror);
+      $('.error-container').removeClass('hidden');
+      $('.error-container').html(createError());
+    } else {
+      $('.error-container').addClass('hidden');
     }
     $('.js-titles').html(result);
   };
@@ -75,18 +75,24 @@ const DOMElements = (() => {
 
   const handleExpandedView = () => {
     $('.titleBox').on('click', '.js-show-btn', (event) => {
+      Saved.errorShowing = false;
       $(event.target).html('hide').removeClass('js-show-btn').addClass('js-hide-btn');
       const bookmark = Saved.getBookmarkFromId($(event.target).closest('li').data('id'));
       $(event.target).closest('.titleBox').append(createDOMExpand(bookmark));
+      bookmark.expanded = true;
     });
     $('.titleBox').on('click', '.js-hide-btn', () => {
+      Saved.errorShowing = false;
+      const bookmark = Saved.getBookmarkFromId($(event.target).closest('li').data('id'));
       $(event.target).html('=>').removeClass('js-hide-btn').addClass('js-show-btn');
       $(event.target).closest('.titleBox').find('.js-desc').remove();
+      bookmark.expanded = false;
     });
   };
 
   const handleDeleteButton = () => {
     $('.titleBox').on('click', '.js-delete-btn', (event) => {
+      Saved.errorShowing = false;
       const bookmarkId = $(event.target).closest('li').data('id');
       API.deleteAPIData(bookmarkId, () => {
         Saved.deleteBookmark(bookmarkId);
@@ -100,6 +106,7 @@ const DOMElements = (() => {
 
   const handleEditButton = () => {
     $('.titleBox').on('click', '.js-edit-btn', event => {
+      Saved.errorShowing = false;
       console.log('edit button works');
     });
   };
@@ -108,9 +115,11 @@ const DOMElements = (() => {
   const handleBookmarkFormModal = () => {
     $('.opt-left').on('click', '#add-btn', () => {
       $('.modal').toggleClass('hidden');
+      Saved.currState.addingBookmark = true;
     });
     $('.modal-content').on('click', '#home-btn', () => {
       $('.modal').toggleClass('hidden');
+      Saved.currState.addingBookmark = false;
     });
   };
 
@@ -124,18 +133,21 @@ const DOMElements = (() => {
         rating: $('#rating').val().slice(0,1)
       };
       $('#title').val(''); $('#url-link').val(''); $('#desc').val(''); $('#rating').val('');
+      const {title, url, desc, rating} = newBookmark;
       API.createAPIData(newBookmark, bookmark => {
+        Saved.APIerror = null;
         Saved.addBookmark(bookmark);
         DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks));
         DOMElements.handleExpandedView();
         DOMElements.handleDeleteButton();
         DOMElements.handleEditButton();
+        $('.modal').toggleClass('hidden');
       }, e => {
-        updateErrorMessage(e);
-        console.log(Saved.APIerror);
+        Saved.APIerror = e.responseJSON.message;
         render(DOMElements.createDOMBookmarks(Saved.bookmarks));
+        Saved.currState.errorShowing = true;
+        Saved.currState.addingBookmark = false;
       });
-      $('.modal').toggleClass('hidden');
     });
   };
 
@@ -144,6 +156,6 @@ const DOMElements = (() => {
     createDOMBookmarks, render, handleBookmarkFormModal,
     handleBookmarkFormCompletion, handleExpandedView,
     handleDeleteButton, handleEditButton, handleInfoBox,
-    handleFilteredView, createDOMErrorMessage
+    handleFilteredView, createError
   };
 })();

@@ -149,4 +149,7 @@ footer {
 
 .error-container, .modal-error-container{
   text-align: center;
+  color: red;
+  font-weight: bold;
+  border: 1px dashed crimson;
 }
