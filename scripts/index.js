@@ -1,8 +1,8 @@
 'use strict';
-/* global API, Saved */
+/* global API, Saved, DOMElements */
 $(
   API.getAPIData( bookmarks => {
     bookmarks.map(bookmark => Saved.addBookmark(bookmark));
-  }),
-  console.log(Saved.bookmarks)
+    console.log(DOMElements.createDOMBookmarkElements(Saved.bookmarks));
+  })
 );
