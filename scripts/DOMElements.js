@@ -4,16 +4,18 @@ const DOMElements = (() => {
   const createDOMResult = bookmark => {
     return `
     <li class="titleBox">
-      <button class="js-reveal-btn">=></button>
+      <button class="js-show-btn">=></button>
       <span class="js-result">${bookmark.title} : ${bookmark.rating} stars</span>
     </li>
     `;
   };
   const createDOMExpand = bookmark => {
     return `
-    <div class="js-descript">
+    <div class="js-desc">
       <p>Description: ${bookmark.desc}</p>
       <a href="${bookmark.url}">Find it again!</a>
+      <button class="js-edit-btn">edit bookmark</button>
+      <button class="js-delete-btn">delete bookmark</button>
     </div>
     `;
   };
@@ -27,6 +29,18 @@ const DOMElements = (() => {
     $('.js-titles').html(result);
   };
 
+  const handleExpandedView = () => {
+    $('.titleBox').on('click', '.js-show-btn', (event) => {
+      $(event.target).html('hide').removeClass().addClass('js-hide-btn');
+      $(event.target).closest('.titleBox').append('<p class="js-desc">hi</p>');
+    });
+    $('.titleBox').on('click', '.js-hide-btn', () => {
+      console.log('button works');
+      $(event.target).html('=>').removeClass().addClass('js-show-btn');
+      $(event.target).closest('.titleBox').find('.js-desc').remove();
+    });
+  };
+
   const handleBookmarkFormModal = () => {
     $('.opt-left').on('click', '#add-btn', () => {
       $('.modal').toggleClass('hidden');
@@ -38,7 +52,6 @@ const DOMElements = (() => {
 
   const handleBookmarkFormCompletion = () => {
     $('fieldset').on('click', '#findit-btn', (event) => {      
-      console.log('button works');
       const newBookmark = {
         newTitle: $('#title').val(),
         newUrl: $('#url-link').val(),
@@ -57,6 +70,6 @@ const DOMElements = (() => {
   return {
     createDOMResult, createDOMExpand, 
     createDOMBookmarks, render, handleBookmarkFormModal,
-    handleBookmarkFormCompletion
+    handleBookmarkFormCompletion, handleExpandedView
   };
 })();

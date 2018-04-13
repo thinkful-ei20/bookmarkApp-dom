@@ -14,17 +14,21 @@ const Saved = (() => {
   const getBookmarkFromId = id => {
     return Saved.bookmarks.find(bookmark => bookmark.id === id);
   };
-
+  const editBookmark = (id, updatedBookmark) => {
+    Object.assign(getBookmarkFromId(id), updatedBookmark);
+  };
   const assignState = bookmarks => {
     bookmarks.map(bookmark => {
       Object.assign(bookmark, {
         expanded: false,
         addingBookmark: false,
+        filteredBy: rating => Saved.bookmarks.filter(bookmark => bookmark.rating === rating)
       });
     });
   };
   return {
     bookmarks, addBookmark, assignState,
-    deleteBookmark, getBookmarkFromId,
+    deleteBookmark, getBookmarkFromId, error,
+    editBookmark
   };
 })();
