@@ -1,4 +1,8 @@
 'use strict';
-/* global API */
-$(API.getAPIData(titleArr => titleArr
-  .map(titleObj => console.log(titleObj.title))));
+/* global API, Saved */
+$(
+  API.getAPIData( bookmarks => {
+    bookmarks.map(bookmark => Saved.addBookmark(bookmark));
+  }),
+  console.log(Saved.bookmarks)
+);

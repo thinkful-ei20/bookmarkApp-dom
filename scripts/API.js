@@ -1,4 +1,5 @@
 'use strict';
+// eslint-disable-next-line no-unused-vars
 const API = (() => {
   
   // API EndPoint for Bookmark App
@@ -8,6 +9,7 @@ const API = (() => {
   const getAPIData = callback => {
     $.getJSON(`${BASE_URL}/bookmarks`, callback);
   };
+
   return {
     getAPIData
   };
