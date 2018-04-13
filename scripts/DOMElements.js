@@ -17,13 +17,17 @@ const DOMElements = (() => {
     `;
   };
 
-  const createDOMBookmarkElements = bookmarks => {
+  const createDOMBookmarks = bookmarks => {
     const liElements = bookmarks.map(bookmark => DOMElements.createDOMResult(bookmark));
     return liElements.join('');
   };
 
+  const render = (result) => {
+    $('.js-titles').html(result);
+  };
+
   return {
     createDOMResult, createDOMExpand, 
-    createDOMBookmarkElements
+    createDOMBookmarks, render
   };
 })();

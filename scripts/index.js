@@ -3,6 +3,6 @@
 $(
   API.getAPIData( bookmarks => {
     bookmarks.map(bookmark => Saved.addBookmark(bookmark));
-    console.log(DOMElements.createDOMBookmarkElements(Saved.bookmarks));
+    DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks));
   })
 );
