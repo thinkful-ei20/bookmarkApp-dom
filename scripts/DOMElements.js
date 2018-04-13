@@ -31,13 +31,19 @@ const DOMElements = (() => {
 
   const handleExpandedView = () => {
     $('.titleBox').on('click', '.js-show-btn', (event) => {
-      $(event.target).html('hide').removeClass().addClass('js-hide-btn');
+      $(event.target).html('hide').removeClass('js-show-btn').addClass('js-hide-btn');
       const bookmark = Saved.getBookmarkFromId($(event.target).closest('li').data('id'));
       $(event.target).closest('.titleBox').append(createDOMExpand(bookmark));
     });
     $('.titleBox').on('click', '.js-hide-btn', () => {
-      $(event.target).html('=>').removeClass().addClass('js-show-btn');
+      $(event.target).html('=>').removeClass('js-hide-btn').addClass('js-show-btn');
       $(event.target).closest('.titleBox').find('.js-desc').remove();
+    });
+  };
+
+  const handleDeleteButton = () => {
+    $('.js-desc').on('click', '.js-delete-btn', (event) => {
+      console.log('button works');
     });
   };
 
@@ -52,24 +58,27 @@ const DOMElements = (() => {
 
   const handleBookmarkFormCompletion = () => {
     $('fieldset').on('click', '#findit-btn', (event) => {      
+      event.preventDefault();
       const newBookmark = {
-        newTitle: $('#title').val(),
-        newUrl: $('#url-link').val(),
-        newDesc: $('#desc').val(),
-        newRating: $('#rating').val().slice(0,1)
+        title: $('#title').val(),
+        url: $('#url-link').val(),
+        desc: $('#desc').val(),
+        rating: $('#rating').val().slice(0,1)
       };
-      API.createAPIData(newBookmark, () => {
-        Saved.addBookmark(newBookmark);
-        $('.modal').toggleClass('hidden');
+      $('#title').val(''); $('#url-link').val(''); $('#desc').val(''); $('#rating').val('');
+      API.createAPIData(newBookmark, bookmark => {
+        Saved.addBookmark(bookmark);
         DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks));
+        DOMElements.handleExpandedView();
       });
-      //console.log(newBookmark);
+      $('.modal').toggleClass('hidden');
     });
   };
 
   return {
     createDOMResult, createDOMExpand, 
     createDOMBookmarks, render, handleBookmarkFormModal,
-    handleBookmarkFormCompletion, handleExpandedView
+    handleBookmarkFormCompletion, handleExpandedView,
+    handleDeleteButton
   };
 })();
