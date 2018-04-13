@@ -19,6 +19,19 @@ const DOMElements = (() => {
     </div>
     `;
   };
+  const createDOMErrorMessage = () => {
+    return `
+    <div id="error-message">
+      <p id="error-content">${Saved.APIerror}</p>
+    </div>
+    `;
+  };
+
+  const updateErrorMessage = (e) => {
+    if (e.responseJSON && e.responseJSON.message) {
+      Saved.APIerror = e.responseJSON.message;
+    } else { Saved.APIerror = `${e.code} type of error has occured on the server`; }
+  };
 
   const createDOMBookmarks = bookmarks => {
     const liElements = bookmarks.map(bookmark => DOMElements.createDOMResult(bookmark));
@@ -26,6 +39,10 @@ const DOMElements = (() => {
   };
 
   const render = (result) => {
+    if (Saved.APIerror) {
+      $('.error-container').html(createDOMErrorMessage(Saved.error));
+      $('.modal-error-container').html(createDOMErrorMessage(Saved.error));
+    }
     $('.js-titles').html(result);
   };
 
@@ -113,6 +130,10 @@ const DOMElements = (() => {
         DOMElements.handleExpandedView();
         DOMElements.handleDeleteButton();
         DOMElements.handleEditButton();
+      }, e => {
+        updateErrorMessage(e);
+        console.log(Saved.APIerror);
+        render(DOMElements.createDOMBookmarks(Saved.bookmarks));
       });
       $('.modal').toggleClass('hidden');
     });
@@ -123,6 +144,6 @@ const DOMElements = (() => {
     createDOMBookmarks, render, handleBookmarkFormModal,
     handleBookmarkFormCompletion, handleExpandedView,
     handleDeleteButton, handleEditButton, handleInfoBox,
-    handleFilteredView
+    handleFilteredView, createDOMErrorMessage
   };
 })();

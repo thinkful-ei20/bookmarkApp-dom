@@ -147,3 +147,6 @@ footer {
   margin-left: 60px;
 }
 
+.error-container, .modal-error-container{
+  text-align: center;
+}
