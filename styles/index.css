@@ -2,6 +2,14 @@
   box-sizing: border-box;
 }
 
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-overflow: '';
+  text-align-last:center;
+}
+
+
 html {
   height: 100%;
 }
