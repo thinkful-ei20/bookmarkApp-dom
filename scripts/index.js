@@ -4,5 +4,7 @@ $(
   API.getAPIData( bookmarks => {
     bookmarks.map(bookmark => Saved.addBookmark(bookmark));
     DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks));
+    DOMElements.handleBookmarkFormModal();
+    DOMElements.handleBookmarkFormCompletion();
   })
 );

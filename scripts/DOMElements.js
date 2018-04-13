@@ -26,8 +26,27 @@ const DOMElements = (() => {
     $('.js-titles').html(result);
   };
 
+  const handleBookmarkFormModal = () => {
+    $('.opt-left').on('click', '#add-btn', () => {
+      $('.modal').toggleClass('hidden');
+    });
+    $('.modal-content').on('click', '#home-btn', () => {
+      $('.modal').toggleClass('hidden');
+    });
+  };
+
+  const handleBookmarkFormCompletion = () => {
+    $('fieldset').on('click', '#findit-btn', (event) => {
+      event.preventDefault();      
+      console.log('button works');
+      const newTitle = $('#title').val();
+      console.log(newTitle);
+    });
+  }
+
   return {
     createDOMResult, createDOMExpand, 
-    createDOMBookmarks, render
+    createDOMBookmarks, render, handleBookmarkFormModal,
+    handleBookmarkFormCompletion
   };
 })();
