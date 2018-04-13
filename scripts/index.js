@@ -1,4 +1,4 @@
 'use strict';
 /* global API */
-$(API.getArrayOfObjects(titleArr => titleArr
+$(API.getAPIData(titleArr => titleArr
   .map(titleObj => console.log(titleObj.title))));
