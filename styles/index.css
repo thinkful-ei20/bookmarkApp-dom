@@ -1,3 +1,141 @@
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+body {
+  font-family: 'Raleway', sans-serif;
+  margin: 0;
+  height: 100%;
+  font-size: 20px;
+  line-height: 1.5;
+  background-color: #eae7dc;
+}
+li {
+  list-style: none;
+}
+/* Title and tag line */
 header {
   text-align: center;
 }
+h2 {
+  text-align: center;
+}
+
+/* 
+Section with add bookmark button,
+filter by minimum rating options,
+and how to use button
+*/
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+/*
+Section with add bookmark button and
+filter by minimum rating options
+*/
+.opt-left {
+  margin-left: 100px;
+}
+.add-btn{
+  height: 150px;
+}
+
+label{
+  margin-left: 10px;
+  font-size: 20px;
+}
+.fil-opt {
+  height: 150px;
+}
+/*
+How to Use button
+*/
+.opt-right {
+  margin-right: 150px;
+  align-self: center;
+}
+#info-btn {
+  width: 365px;
+  height: 90px;
+  color: #E85A4F;
+  font-size: 45px; 
+  font-weight: bold; 
+  font-style: normal; 
+  text-decoration: none; 
+  text-align: center; 
+  background: #EAE7DC; 
+  border: 10px solid #D8C3A5; 
+  border-radius: 100px; 
+}
+/*
+Hides an element
+*/
+.hidden {
+  display: none;
+}
+/* 
+Creates a modal on top
+of the page, all other items
+behind modal are inaccessible
+*/
+.modal {
+  z-index: 3;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0, 0.5);
+  padding-top: 100px;
+}
+.modal-content {
+  margin: auto;
+  background-color: #d8c3a5;
+  position: relative;
+  padding: 0;
+  outline: 0;
+  width: 600px;
+}
+fieldset {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputBox {
+  padding: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  width: 100%;
+  font-size: 30px;
+}
+.btn {
+  background-color: #d8c3a5;
+  border-color: #000;
+  color: #e85a4f;
+  font-weight: bold;
+  height: 100px;
+  width: 100px;
+  font-size: 40px;
+}
+.opt {
+  text-align: center;
+}
+.titleBox {
+  border: 1px solid gray;
+  margin-right: 30px;
+}
+
+footer {
+  text-align: center;
+}
+.js-descript {
+  margin-left: 60px;
+}
+
