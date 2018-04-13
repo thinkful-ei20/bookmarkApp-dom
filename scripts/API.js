@@ -10,7 +10,18 @@ const API = (() => {
     $.getJSON(`${BASE_URL}/bookmarks`, callback);
   };
 
+  const createAPIData = (formObj, win, loss) => {
+    $.ajax({
+      url: `${BASE_URL}/bookmarks`,
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(formObj),
+      success: win,
+      error: loss
+    });
+  };
+
   return {
-    getAPIData
+    getAPIData, createAPIData
   };
 })();
