@@ -1,161 +1,183 @@
 'use strict';
-/* global API, Saved */
+/* global Saved, API */
 const DOMElements = (() => {
+  const showModal = () => {
+    return `
+    <div id="add-form" class="modal">
+      <div class="modal-content">
+        <div class="container">
+          <button class="btn" id="home-btn">go back</button>
+          <div class="error-container"></div>
+          <form id="js-addBookmarkForm">
+            <fieldset>
+                <legend>Add your bookmark here</legend>
+                <label for="title" class="label">title</label>
+                <input type="text" name="title" id="title" class="inputBox" placeholder="type your title here">
+                <label for="title">site address</label>
+                <input type="text" name="url-link" id="url-link" class="inputBox" placeholder="paste your url link here">
+                <label for="title">description</label>
+                <input type="text" name="description" id="desc" class="inputBox" placeholder="describe your bookmark">
+                <label for="rating">pick a rating</label>
+                <select name="rating" id="rating" class="inputBox">
+                  <option value="5 stars" class="opt">5 stars</option>
+                  <option value="4 stars" class="opt">4 stars</option>
+                  <option value="3 stars" class="opt">3 stars</option>
+                  <option value="2 stars" class="opt">2 stars</option>
+                  <option value="1 star" class="opt">1 star</option>
+                </select>
+                <button name="findit-btn" id="findit-btn">Find It Again</button>
+            </fieldset>
+          </form>
+        </div>
+      </div> 
+    </div>
+    `;
+  };
+  const showInfoModal = () => {
+    return `
+    <div id="add-form" class="modal">
+      <div class="modal-content">
+        <div class="container">
+          <button class="btn" id="home-btn">go back</button>
+        </div>
+      </div> 
+    </div>
+    `;
+  };
   const createDOMResult = bookmark => {
     return `
-    <li class="titleBox" data-id="${bookmark.id}">
+    <li class="js-titleBox" data-id="${bookmark.id}">
       <button class="js-show-btn">=></button>
       <span class="js-result">${bookmark.title} : ${bookmark.rating} stars</span>
     </li>
     `;
+  };
+  const createDOMBookmarkList = bookmarks => {
+    const liElements = bookmarks.map(bookmark => DOMElements.createDOMResult(bookmark));
+    return liElements.join('');
   };
   const createDOMExpand = bookmark => {
     return `
     <div class="js-desc">
       <p>Description: ${bookmark.desc}</p>
       <a href="${bookmark.url}">Find it again!</a>
-      <button class="js-edit-btn">edit bookmark</button>
-      <button class="js-delete-btn">delete bookmark</button>
+      <div id="js-btns">
+        <button class="js-edit-btn">edit bookmark</button>
+        <button class="js-delete-btn">delete bookmark</button>
+      </div>
     </div>
     `;
   };
-
-  const createError = () => {
+  const showErrorBox = () => {
     return `
     <div id="error-message">
       <p id="error-content">${Saved.APIerror}</p>
     </div>
     `;
   };
-
-  const createDOMBookmarks = bookmarks => {
-    const liElements = bookmarks.map(bookmark => DOMElements.createDOMResult(bookmark));
-    return liElements.join('');
-  };
-
   const render = (result) => {
     console.log('render called');
     if(Saved.APIerror) {
       console.log('error should render');
       console.log(Saved.APIerror);
-      $('.error-container').removeClass('hidden');
-      $('.error-container').html(createError());
+      $('.error-container').html(showErrorBox());
     } else {
-      $('.error-container').addClass('hidden');
+      $('.error-container').remove();
     }
     $('.js-titles').html(result);
+  }; 
+  const clickButton = (btnLoc, type, fn) => {
+    if (type==='#fil-opt') {
+      $(btnLoc).on('change', type, fn);
+    }
+    $(btnLoc).on('click', type, fn);
   };
-
+  const handleInfoBox = () => {
+    clickButton('.opt-right','#info-btn', () => {
+      $('section').append(showInfoModal());
+      clickButton('.modal-content', '#home-btn', () => {
+        $('.modal').remove();
+      });
+    });
+  };
   const handleFilteredView = () => {
-    $('.opt-left').on('change', '#fil-opt', () => {
+    clickButton('.opt-left', '#fil-opt', () => {
       switch($('#fil-opt').val()) {
       case '5 stars only':
-        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks.filter(bookmark => bookmark.rating === 5)));
+        DOMElements.render(DOMElements.createDOMBookmarkList(Saved.bookmarks.filter(bookmark => bookmark.rating === 5)));
         break;
       case 'above 3 stars':
-        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks.filter(bookmark => bookmark.rating > 3)));
+        DOMElements.render(DOMElements.createDOMBookmarkList(Saved.bookmarks.filter(bookmark => bookmark.rating > 3)));
         break;
       case 'above 2 stars':
-        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks.filter(bookmark => bookmark.rating > 2)));
+        DOMElements.render(DOMElements.createDOMBookmarkList(Saved.bookmarks.filter(bookmark => bookmark.rating > 2)));
         break;
       case 'above 1 stars':
-        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks.filter(bookmark => bookmark.rating > 1)));
+        DOMElements.render(DOMElements.createDOMBookmarkList(Saved.bookmarks.filter(bookmark => bookmark.rating > 1)));
         break;
       default:
-        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks));
+        DOMElements.render(DOMElements.createDOMBookmarkList(Saved.bookmarks));
       }
     });
   };
-
-  const handleInfoBox = () => {
-    $('.opt-right').on('click', '#info-btn', () => {
-      console.log('info button works');
+  const handleAddFormModal = () => {
+    clickButton('.opt-left', '#add-btn',  () => {
+      $('section').append(showModal());
+      clickButton('.modal-content', '#home-btn', () => {
+        $('.modal').remove();
+      });
+      clickButton('fieldset', '#findit-btn', event => {      
+        event.preventDefault();
+        const newBookmark = {
+          title: $('#title').val(),
+          url: $('#url-link').val(),
+          desc: $('#desc').val(),
+          rating: $('#rating').val().slice(0,1)
+        };
+        $('#title').val(''); $('#url-link').val(''); $('#desc').val(''); $('#rating').val('');
+        API.createAPIData(newBookmark, bookmark => {
+          Saved.APIerror = null;
+          Saved.addBookmark(bookmark);
+          DOMElements.render(DOMElements.createDOMBookmarkList(Saved.bookmarks));
+        }, e => {
+          Saved.APIerror = e.responseJSON.message;
+          render(DOMElements.createDOMBookmarkList(Saved.bookmarks));
+        });
+      });
     });
   };
-
   const handleExpandedView = () => {
-    $('.titleBox').on('click', '.js-show-btn', (event) => {
-      Saved.errorShowing = false;
-      $(event.target).html('hide').removeClass('js-show-btn').addClass('js-hide-btn');
+    $('.js-titles').on('click', '.js-show-btn', (event) => {
       const bookmark = Saved.getBookmarkFromId($(event.target).closest('li').data('id'));
-      $(event.target).closest('.titleBox').append(createDOMExpand(bookmark));
-      bookmark.expanded = true;
-    });
-    $('.titleBox').on('click', '.js-hide-btn', () => {
-      Saved.errorShowing = false;
-      const bookmark = Saved.getBookmarkFromId($(event.target).closest('li').data('id'));
-      $(event.target).html('=>').removeClass('js-hide-btn').addClass('js-show-btn');
-      $(event.target).closest('.titleBox').find('.js-desc').remove();
-      bookmark.expanded = false;
-    });
-  };
-
-  const handleDeleteButton = () => {
-    $('.titleBox').on('click', '.js-delete-btn', (event) => {
-      Saved.errorShowing = false;
-      const bookmarkId = $(event.target).closest('li').data('id');
-      API.deleteAPIData(bookmarkId, () => {
-        Saved.deleteBookmark(bookmarkId);
-        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks));
-        DOMElements.handleExpandedView();
-        DOMElements.handleDeleteButton();
-        DOMElements.handleEditButton();
-      });
+      if(bookmark.expanded===false) {
+        $(event.target).closest('.js-titleBox').find('.js-result').append(createDOMExpand(bookmark));
+        bookmark.expanded = true;
+        $('#js-btns').on('click', '.js-delete-btn', (event) => {
+          console.log('delete btn works');
+          const bookmarkId = $(event.target).closest('li').data('id');
+          API.deleteAPIData(bookmarkId, () => {
+            Saved.deleteBookmark(bookmarkId);
+            DOMElements.render(DOMElements.createDOMBookmarkList(Saved.bookmarks));
+          }, e => {
+            Saved.APIerror = e.responseJSON.message;
+            render(DOMElements.createDOMBookmarkList(Saved.bookmarks));
+          });
+        });
+        $('#js-btns').on('click', '.js-edit-btn', (event) => {
+          console.log('edit btn works');
+        });
+      } else if (bookmark.expanded===true){
+        bookmark.expanded = false;
+        $(event.target).closest('.js-titleBox').find('.js-desc').remove();
+      }
     });
   };
-
-  const handleEditButton = () => {
-    $('.titleBox').on('click', '.js-edit-btn', event => {
-      Saved.errorShowing = false;
-      console.log('edit button works');
-    });
+  const bindListeners = () => {
+    handleFilteredView(); handleInfoBox(); handleAddFormModal();
+    handleExpandedView();
   };
-
-
-  const handleBookmarkFormModal = () => {
-    $('.opt-left').on('click', '#add-btn', () => {
-      $('.modal').toggleClass('hidden');
-      Saved.currState.addingBookmark = true;
-    });
-    $('.modal-content').on('click', '#home-btn', () => {
-      $('.modal').toggleClass('hidden');
-      Saved.currState.addingBookmark = false;
-    });
-  };
-
-  const handleBookmarkFormCompletion = () => {
-    $('fieldset').on('click', '#findit-btn', (event) => {      
-      event.preventDefault();
-      const newBookmark = {
-        title: $('#title').val(),
-        url: $('#url-link').val(),
-        desc: $('#desc').val(),
-        rating: $('#rating').val().slice(0,1)
-      };
-      $('#title').val(''); $('#url-link').val(''); $('#desc').val(''); $('#rating').val('');
-      const {title, url, desc, rating} = newBookmark;
-      API.createAPIData(newBookmark, bookmark => {
-        Saved.APIerror = null;
-        Saved.addBookmark(bookmark);
-        DOMElements.render(DOMElements.createDOMBookmarks(Saved.bookmarks));
-        DOMElements.handleExpandedView();
-        DOMElements.handleDeleteButton();
-        DOMElements.handleEditButton();
-        $('.modal').toggleClass('hidden');
-      }, e => {
-        Saved.APIerror = e.responseJSON.message;
-        render(DOMElements.createDOMBookmarks(Saved.bookmarks));
-        Saved.currState.errorShowing = true;
-        Saved.currState.addingBookmark = false;
-      });
-    });
-  };
-
   return {
-    createDOMResult, createDOMExpand, 
-    createDOMBookmarks, render, handleBookmarkFormModal,
-    handleBookmarkFormCompletion, handleExpandedView,
-    handleDeleteButton, handleEditButton, handleInfoBox,
-    handleFilteredView, createError
+    bindListeners, render, createDOMResult,
+    createDOMExpand, createDOMBookmarkList
   };
 })();

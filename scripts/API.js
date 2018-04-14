@@ -1,15 +1,10 @@
 'use strict';
 // eslint-disable-next-line no-unused-vars
 const API = (() => {
-  
-  // API EndPoint for Bookmark App
   const BASE_URL = 'https://thinkful-list-api.herokuapp.com/mckoy';
-  
-  // Returns an response from the API server using GET
   const getAPIData = callback => {
     $.getJSON(`${BASE_URL}/bookmarks`, callback);
   };
-
   const createAPIData = (formObj, win, loss) => {
     $.ajax({
       url: `${BASE_URL}/bookmarks`,
@@ -20,7 +15,6 @@ const API = (() => {
       error: loss
     });
   };
-
   const updateAPIData = (formObj, win, loss) => {
     $.ajax({
       url: `${BASE_URL}/bookmarks/${formObj.id}`,
@@ -31,7 +25,6 @@ const API = (() => {
       error: loss
     });
   };
-
   const deleteAPIData = (id, win, loss) => {
     $.ajax({
       url: `${BASE_URL}/bookmarks/${id}`,
@@ -40,7 +33,6 @@ const API = (() => {
       error: loss
     });
   };
-
   return {
     getAPIData, createAPIData, deleteAPIData,
     updateAPIData
